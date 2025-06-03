@@ -56,7 +56,7 @@ export default function Home() {
             For Pharma & Biotech
           </Badge>
           <h1 className="text-5xl sm:text-6xl font-bold tracking-tight border-b-4 border-black pb-2 mb-2 inline-block">
-            Curigenx
+            CurigenX
           </h1>
           <p className="text-lg sm:text-xl text-gray-700 max-w-xl text-center">
             SaaS platform for regulatory, clinical, and medical writing teams. Automate and streamline QC of Clinical Study Reports (CSRs) for regulatory dossier accuracy, consistency, and scientific integrity.
@@ -70,62 +70,58 @@ export default function Home() {
 
       <main className="flex flex-col items-center w-full max-w-4xl gap-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
-          <Card className="border-black bg-white">
-            <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                <FileTextIcon className="w-5 h-5" />
-                Upload New Document
-              </h2>
-              <UploadDropzone
-                endpoint="pdfUploader"
-                onClientUploadComplete={handleUploadComplete}
-                onUploadError={handleUploadError}
-                appearance={{
-                  container: "border-2 border-dashed border-gray-300 bg-white font-mono",
-                  uploadIcon: "text-gray-400",
-                  label: "text-sm text-gray-700 font-medium",
-                  allowedContent: "text-xs text-gray-500",
-                  button: "bg-black text-white border-black font-mono text-sm px-4 py-2"
-                }}
-              />
-            </CardContent>
-          </Card>
-          <Card className="border-black bg-white">
-            <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                <ListBulletIcon className="w-5 h-5" />
-                Your Documents
-              </h2>
-              {loading ? (
-                <p className="text-gray-600 text-sm">Loading documents...</p>
-              ) : documents.length === 0 ? (
-                <p className="text-gray-600 text-sm">No documents uploaded yet.</p>
-              ) : (
-                <>
-                  <p className="text-sm text-gray-700 mb-3">
-                    {documents.length} document{documents.length !== 1 ? 's' : ''} uploaded
-                  </p>
-                  <div className="space-y-2">
-                    {documents.map((doc) => (
-                      <Link
-                        key={doc.id}
-                        href={`/documents/${doc.id}`}
-                        className="block border border-gray-300 p-3 bg-white hover:bg-gray-50 transition-colors rounded-none"
-                      >
-                        <div className="flex items-center gap-2 mb-2">
-                          <FileTextIcon className="w-4 h-4 text-gray-700" />
-                          <h4 className="font-medium text-sm truncate">{doc.name}</h4>
-                        </div>
-                        <p className="text-xs text-gray-600">
-                          Uploaded: {new Date(doc.uploadedAt).toLocaleDateString()}
-                        </p>
-                      </Link>
-                    ))}
-                  </div>
-                </>
-              )}
-            </CardContent>
-          </Card>
+          <div className="border-2 border-black bg-white p-6">
+            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+              <FileTextIcon className="w-5 h-5" />
+              Upload New Document
+            </h2>
+            <UploadDropzone
+              endpoint="pdfUploader"
+              onClientUploadComplete={handleUploadComplete}
+              onUploadError={handleUploadError}
+              appearance={{
+                container: "border-2 border-dashed border-gray-300 bg-white font-mono",
+                uploadIcon: "text-gray-400",
+                label: "text-sm text-gray-700 font-medium",
+                allowedContent: "text-xs text-gray-500",
+                button: "bg-black text-white border-black font-mono text-sm px-4 py-2"
+              }}
+            />
+          </div>
+          <div className="border-2 border-black bg-white p-6">
+            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+              <ListBulletIcon className="w-5 h-5" />
+              Your Documents
+            </h2>
+            {loading ? (
+              <p className="text-gray-600 text-sm">Loading documents...</p>
+            ) : documents.length === 0 ? (
+              <p className="text-gray-600 text-sm">No documents uploaded yet.</p>
+            ) : (
+              <>
+                <p className="text-sm text-gray-700 mb-3">
+                  {documents.length} document{documents.length !== 1 ? 's' : ''} uploaded
+                </p>
+                <div className="space-y-2">
+                  {documents.map((doc) => (
+                    <Link
+                      key={doc.id}
+                      href={`/documents/${doc.id}`}
+                      className="block border border-gray-300 p-3 bg-white hover:bg-gray-50 transition-colors rounded-none"
+                    >
+                      <div className="flex items-center gap-2 mb-2">
+                        <FileTextIcon className="w-4 h-4 text-gray-700" />
+                        <h4 className="font-medium text-sm truncate">{doc.name}</h4>
+                      </div>
+                      <p className="text-xs text-gray-600">
+                        Uploaded: {new Date(doc.uploadedAt).toLocaleDateString()}
+                      </p>
+                    </Link>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </main>
 

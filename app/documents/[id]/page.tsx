@@ -12,8 +12,9 @@ import {
   BreadcrumbSeparator
 } from "@/components/ui/breadcrumb";
 import { DocumentStore, type Document } from "@/lib/document-store";
-import { FileTextIcon, ListBulletIcon, HomeIcon, TrashIcon } from "@radix-ui/react-icons";
+import { HomeIcon, TrashIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
+import TabbedPdfViewer from "@/components/tabbed-pdf-viewer";
 
 export default function DocumentViewPage() {
   const params = useParams();
@@ -22,7 +23,7 @@ export default function DocumentViewPage() {
   
   const [document, setDocument] = useState<Document | null>(null);
   const [loading, setLoading] = useState(true);
-  const [indexing, setIndexing] = useState(false);
+
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
@@ -47,52 +48,7 @@ export default function DocumentViewPage() {
     }
   }, [documentId, router]);
 
-  const handleIndexDocument = async () => {
-    if (!document) return;
-    
-    setIndexing(true);
-    
-    // Simulate document analysis/indexing
-    setTimeout(async () => {
-      const mockAnalysis = {
-        pageCount: Math.floor(Math.random() * 20) + 5,
-        tableOfContents: [
-          {
-            page: 1,
-            title: "Introduction",
-            keywords: ["introduction", "overview", "summary"]
-          },
-          {
-            page: 3,
-            title: "Methodology",
-            keywords: ["method", "approach", "process"]
-          },
-          {
-            page: 8,
-            title: "Results",
-            keywords: ["findings", "data", "analysis"]
-          },
-          {
-            page: 12,
-            title: "Conclusion",
-            keywords: ["conclusion", "summary", "results"]
-          }
-        ]
-      };
 
-      try {
-        await DocumentStore.updateDocumentAnalysis(document.id, mockAnalysis);
-        const updatedDoc = await DocumentStore.getDocument(document.id);
-        if (updatedDoc) {
-          setDocument(updatedDoc);
-        }
-      } catch (error) {
-        console.error('Error updating document analysis:', error);
-      } finally {
-        setIndexing(false);
-      }
-    }, 2000);
-  };
 
   const handleDeleteDocument = async () => {
     if (!document) return;
@@ -118,13 +74,7 @@ export default function DocumentViewPage() {
     }
   };
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  };
+
 
   if (loading) {
     return (
@@ -204,71 +154,10 @@ export default function DocumentViewPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[calc(100vh-200px)]">
-              {/* PDF Viewer Section */}
-              <div className="md:col-span-2 border border-black p-4 flex flex-col bg-gray-50">
-                <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-300">
-                  <div className="flex items-center gap-2">
-                    <FileTextIcon className="w-5 h-5 text-gray-700" />
-                    <h2 className="text-lg font-semibold">Document Viewer</h2>
-                  </div>
-                  <div className="text-sm text-gray-600">
-                    {formatFileSize(document.size)}
-                  </div>
-                </div>
-                <div className="flex-grow overflow-auto bg-white shadow-inner">
-                  <iframe
-                    src={document.url}
-                    className="w-full h-full"
-                    title="PDF Preview"
-                  />
-                </div>
-              </div>
-
-              {/* Analysis Section */}
-              <div className="md:col-span-1 border border-black p-4 flex flex-col bg-gray-50">
-                <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-300">
-                  <ListBulletIcon className="w-5 h-5 text-gray-700" />
-                  <h2 className="text-lg font-semibold">Content Analysis</h2>
-                </div>
-                <div className="flex-grow overflow-auto space-y-3 p-1">
-                  <div className="text-sm space-y-2">
-                    <div className="p-3 border border-gray-300 bg-white">
-                      <h3 className="font-medium text-sm mb-1">Document Info</h3>
-                      <p className="text-xs text-gray-600">Name: {document.name}</p>
-                      <p className="text-xs text-gray-600">Size: {formatFileSize(document.size)}</p>
-                      <p className="text-xs text-gray-600">
-                        Uploaded: {new Date(document.uploadedAt).toLocaleDateString()}
-                      </p>
-                      {document.analysis?.pageCount && (
-                        <p className="text-xs text-gray-600">Pages: {document.analysis.pageCount}</p>
-                      )}
-                    </div>
-
-                    {document.analysis?.tableOfContents ? (
-                      document.analysis.tableOfContents.map((item, index) => (
-                        <div key={index} className="p-3 border border-dashed border-gray-300 bg-white">
-                          <h3 className="font-medium text-sm mb-1">Page {item.page}: {item.title}</h3>
-                          <p className="text-xs text-gray-600">Keywords: {item.keywords.join(', ')}</p>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="p-3 border border-dashed border-gray-300 bg-white">
-                        <p className="text-sm text-gray-700">
-                          Analysis will appear here after indexing.
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <Button 
-                  className="mt-4 w-full" 
-                  onClick={handleIndexDocument}
-                  disabled={indexing}
-                >
-                  {indexing ? 'Indexing...' : 'Index Document'}
-                </Button>
-              </div>
+            <div className="border border-black h-[calc(100vh-200px)]">
+              <TabbedPdfViewer 
+                document={document} 
+              />
             </div>
           </div>
         </main>

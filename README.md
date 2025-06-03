@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CurigenX
+
+CurigenX is a SaaS platform built for regulatory, clinical, and medical writing teams in the pharmaceutical and biotech industries. Its core function is to automate and streamline quality control (QC) of Clinical Study Reports (CSRs), ensuring regulatory dossier accuracy, consistency, and scientific integrity before submission to health authorities.
+
+## Features
+- **Automated PDF Upload & Indexing:** Effortlessly upload and analyze PDF documents.
+- **Intelligent Content Indexing:** Extract and organize key information from CSRs.
+- **Minimal, Technical UI:** Monospace typography, black & white theme, and grid-based layout for clarity and focus.
+- **Real-time Feedback:** Loading states and progress indicators for all operations.
+- **Designed for Pharma & Biotech:** Built with regulatory and scientific rigor in mind.
+
+## Tech Stack
+- **Framework:** Next.js (App Router, React)
+- **Styling:** Tailwind CSS, custom minimalist design
+- **UI Components:** shadcn/ui, Radix Icons
+- **File Uploads:** UploadThing
+- **Package Manager:** [bun](https://bun.sh/)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+- [Bun](https://bun.sh/) (recommended over npm/yarn)
+- Node.js 18+
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Installation
+```sh
+bun install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Development
+```sh
+bun run dev
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build
+```sh
+bun run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Lint
+```sh
+bun run lint
+```
 
-## Learn More
+## Folder Structure
+- `app/` — Next.js app directory (pages, API routes, styles)
+- `components/` — UI and custom React components
+- `public/` — Static assets (SVGs, images)
+- `lib/` — Utility libraries (document store, upload logic)
 
-To learn more about Next.js, take a look at the following resources:
+## License
+MIT
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+*Ensuring scientific integrity & regulatory accuracy for every submission.*
