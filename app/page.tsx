@@ -16,6 +16,7 @@ export default function Home() {
   const router = useRouter();
   const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     const loadDocuments = async () => {
@@ -32,7 +33,12 @@ export default function Home() {
     loadDocuments();
   }, []);
 
+  const handleUploadStart = () => {
+    setUploading(true);
+  };
+
   const handleUploadComplete = async (res: UploadResponse[]) => {
+    setUploading(false);
     if (res?.[0]?.serverData?.document) {
       const newDocument = res[0].serverData.document;
       try {
@@ -46,6 +52,7 @@ export default function Home() {
   };
 
   const handleUploadError = (error: Error) => {
+    setUploading(false);
     alert(`Upload failed: ${error.message}`);
   };  return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-50 to-white text-black font-mono page-transition relative">
@@ -106,27 +113,67 @@ export default function Home() {
                   endpoint="pdfUploader"
                   onClientUploadComplete={handleUploadComplete}
                   onUploadError={handleUploadError}
+                  onUploadBegin={handleUploadStart}
+                  config={{
+                    mode: "auto"
+                  }}
                   appearance={{
                     container: "border-3 border-dashed border-gray-400 bg-gradient-to-br from-gray-50 to-white font-mono rounded-xl hover:border-black hover:bg-gradient-to-br hover:from-gray-100 hover:to-gray-50 transition-all duration-300 min-h-[200px]",
                     uploadIcon: "text-gray-600 mb-4",
                     label: "text-lg text-gray-800 font-semibold mb-2 tracking-wide",
                     allowedContent: "text-sm text-gray-600 mb-6",
-                    button: "bg-black text-white border-black font-mono text-base font-semibold px-10 py-4 rounded-lg hover:bg-gray-800 hover:shadow-xl transition-all duration-300 transform hover:scale-105 btn-enhanced tracking-wide uppercase"
+                    button: "bg-black text-white border-black font-mono text-base font-semibold px-8 py-4 rounded-lg hover:bg-gray-800 hover:shadow-xl transition-all duration-300 transform hover:scale-105 btn-enhanced tracking-wide uppercase min-w-[200px] max-w-[250px] truncate"
                   }}
                   content={{
-                    label: ({ ready }) => (
+                    label: ({ ready, isUploading }) => (
                       <div className="text-center">
-                        {ready ? "Drop PDF files here or click to browse" : "Getting ready..."}
+                        {isUploading || uploading ? (
+                          <div className="flex items-center justify-center gap-3">
+                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-black"></div>
+                            <span className="font-semibold">Processing your PDF...</span>
+                          </div>
+                        ) : ready ? (
+                          <div>
+                            <div className="text-xl font-bold mb-1">Drop PDF files here</div>
+                            <div className="text-sm text-gray-600">Files upload automatically when selected</div>
+                          </div>
+                        ) : (
+                          "Getting ready..."
+                        )}
                       </div>
                     ),
                     allowedContent: ({ ready, fileTypes, isUploading }) => {
+                      if (isUploading || uploading) return (
+                        <div className="flex items-center justify-center gap-2 text-gray-700">
+                          <span className="auto-upload-indicator">
+                            <span className="inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                            Uploading automatically...
+                          </span>
+                        </div>
+                      );
                       if (!ready) return "Preparing uploader...";
-                      if (isUploading) return "Uploading...";
-                      return `Supported: ${fileTypes.join(", ")} • Max 16MB`;
+                      return (
+                        <div className="space-y-2">
+                          <div className="text-gray-600">Supported: {fileTypes.join(", ")} • Max 16MB</div>
+                          <div className="flex items-center justify-center gap-2 text-green-600">
+                            <span className="auto-upload-indicator">
+                              <span className="inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                              Auto-upload enabled
+                            </span>
+                          </div>
+                        </div>
+                      );
                     },
                     button: ({ ready, isUploading }) => {
-                      if (isUploading) return "Uploading...";
-                      if (ready) return "Choose PDF";
+                      if (isUploading || uploading) return (
+                        <div className="flex items-center justify-center gap-2 w-full">
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                          <span className="truncate">Uploading...</span>
+                        </div>
+                      );
+                      if (ready) return (
+                        <span className="truncate">Select PDF File</span>
+                      );
                       return "Loading...";
                     }
                   }}
