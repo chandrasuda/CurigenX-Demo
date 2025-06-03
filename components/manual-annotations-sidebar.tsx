@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
@@ -77,9 +78,11 @@ export default function ManualAnnotationsSidebar({
                 
                 {highlight.content.image && (
                   <div className="mb-1">
-                    <img 
+                    <Image 
                       src={highlight.content.image} 
                       alt="Screenshot" 
+                      width={400}
+                      height={300}
                       className="max-w-full h-auto border border-black"
                     />
                   </div>

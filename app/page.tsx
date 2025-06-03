@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { UploadDropzone } from "@/lib/uploadthing";
 import { DocumentStore, type Document, type UploadResponse } from "@/lib/document-store";
@@ -66,7 +67,7 @@ export default function Home() {
                 <div className="relative w-24 h-24 sm:w-32 sm:h-32 animate-float">
                   <div className="absolute inset-0 bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 rounded-full opacity-60 animate-pulse"></div>
                   <div className="absolute inset-1 bg-gradient-to-br from-white to-gray-100 rounded-full"></div>
-                  <img src="/globe.svg" alt="Technical Globe" className="relative w-full h-full object-contain opacity-90 z-10" />
+                  <Image src="/globe.svg" alt="Technical Globe" width={128} height={128} className="relative w-full h-full object-contain opacity-90 z-10" />
                   <span className="sr-only">Technical globe accent</span>
                 </div>
               </div>

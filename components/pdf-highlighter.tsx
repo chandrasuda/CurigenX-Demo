@@ -204,12 +204,16 @@ export default function PdfHighlighterComponent({
 }: PdfHighlighterComponentProps) {
   const scrollViewerTo = useRef<(highlight: IHighlight) => void>(() => {});
 
+  const getHighlightById = (id: string) => {
+    return highlights.find((highlight) => highlight.id === id);
+  };
+
   const scrollToHighlightFromHash = useCallback(() => {
     const highlight = getHighlightById(parseIdFromHash());
     if (highlight) {
       scrollViewerTo.current(highlight);
     }
-  }, [highlights]);
+  }, [highlights, getHighlightById]);
 
   useEffect(() => {
     window.addEventListener("hashchange", scrollToHighlightFromHash, false);
@@ -221,10 +225,6 @@ export default function PdfHighlighterComponent({
       );
     };
   }, [scrollToHighlightFromHash]);
-
-  const getHighlightById = (id: string) => {
-    return highlights.find((highlight) => highlight.id === id);
-  };
 
   const addHighlight = (highlight: NewHighlight) => {
     console.log("Saving highlight", highlight);
