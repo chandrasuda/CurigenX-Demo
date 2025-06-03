@@ -123,3 +123,181 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Custom animations and enhancements */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); }
+  50% { box-shadow: 0 0 30px rgba(0, 0, 0, 0.2); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 4s ease-in-out infinite;
+}
+
+.shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Custom scrollbar for better UX */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Enhanced focus states */
+.focus-enhanced:focus-visible {
+  outline: 3px solid rgba(0, 0, 0, 0.2);
+  outline-offset: 2px;
+  transition: outline 0.2s ease;
+}
+
+/* Smooth page transitions */
+.page-transition {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Enhanced button hover effects */
+.btn-enhanced {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.btn-enhanced::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-enhanced:hover::before {
+  left: 100%;
+}
+
+/* Custom gradient text effects */
+.gradient-text {
+  background: linear-gradient(135deg, #000000, #434343, #000000);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 4s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Enhanced card hover effects */
+.card-enhanced {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, box-shadow;
+}
+
+.card-enhanced:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+/* Loading spinner enhancements */
+@keyframes pulse-ring {
+  0% { transform: scale(0.33); }
+  40%, 50% { opacity: 1; }
+  100% { opacity: 0; transform: scale(1.33); }
+}
+
+.loading-enhanced::before {
+  content: '';
+  position: absolute;
+  border: 3px solid #000;
+  border-radius: 50%;
+  animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+/* UploadThing button enhancements */
+[data-ut-element="button"] {
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 140px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.05em !important;
+}
+
+[data-ut-element="button"]:hover {
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2) !important;
+}
+
+[data-ut-element="button"]:active {
+  transform: translateY(0) scale(0.98) !important;
+}
+
+/* UploadThing container improvements */
+[data-ut-element="container"] {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+[data-ut-element="upload-icon"] {
+  transition: all 0.3s ease !important;
+}
+
+[data-ut-element="container"]:hover [data-ut-element="upload-icon"] {
+  transform: scale(1.1) !important;
+}
+
+/* Enhanced loading states */
+[data-ut-element="button"][data-state="uploading"] {
+  background: linear-gradient(45deg, #333, #555, #333) !important;
+  background-size: 200% 200% !important;
+  animation: loadingGradient 2s ease infinite !important;
+}
+
+@keyframes loadingGradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}

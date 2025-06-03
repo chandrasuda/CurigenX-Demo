@@ -82,13 +82,13 @@ export default function DocumentsPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen items-center bg-white text-black font-mono p-4 sm:p-8">
-      <div className="w-full max-w-6xl">
-        <Breadcrumb className="mb-6">
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-50 to-white text-black font-mono">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 py-8">
+        <Breadcrumb className="mb-8">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href="/" className="flex items-center gap-1">
+                <Link href="/" className="flex items-center gap-2 hover:text-gray-700 transition-colors">
                   <HomeIcon className="w-4 h-4" />
                   Home
                 </Link>
@@ -96,65 +96,103 @@ export default function DocumentsPage() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>Documents</BreadcrumbPage>
+              <BreadcrumbPage className="text-gray-700">Documents</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
 
-        <main className="flex flex-col items-center w-full gap-6">
-          <div className="w-full max-w-6xl">
-            <div className="flex items-center justify-between mb-6">
-              <h1 className="text-3xl font-semibold">Your Documents</h1>
-              <Button asChild>
-                <Link href="/">Upload New Document</Link>
-              </Button>
+        <main className="flex flex-col w-full">
+          <div className="mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-4xl font-bold mb-2">Document Library</h1>
+                <p className="text-gray-600">
+                  Manage and analyze your regulatory documents
+                </p>
+              </div>
+              <div className="flex gap-3">
+                <Button variant="outline" asChild>
+                  <Link href="/" className="flex items-center gap-2">
+                    <FileTextIcon className="w-4 h-4" />
+                    Upload New Document
+                  </Link>
+                </Button>
+              </div>
             </div>
+          </div>
 
             {documents.length === 0 ? (
-              <div className="text-center py-12 border-2 border-dashed border-gray-300">
-                <FileTextIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-xl font-medium mb-2">No documents found</h3>
-                <p className="text-gray-600 mb-6">Upload your first PDF to get started</p>
-                <Button asChild>
-                  <Link href="/">Upload Document</Link>
+              <div className="text-center py-16 border-2 border-dashed border-gray-300 rounded-lg bg-white">
+                <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <FileTextIcon className="w-10 h-10 text-gray-400" />
+                </div>
+                <h3 className="text-2xl font-semibold mb-3">No documents found</h3>
+                <p className="text-gray-600 mb-8 max-w-md mx-auto">
+                  Upload your first PDF document to begin AI-powered analysis and quality control
+                </p>
+                <Button asChild className="bg-black text-white hover:bg-gray-800">
+                  <Link href="/" className="flex items-center gap-2">
+                    <FileTextIcon className="w-4 h-4" />
+                    Upload Document
+                  </Link>
                 </Button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {documents.map((doc) => (
-                  <div key={doc.id} className="border border-black p-4 bg-white">
-                    <div className="flex items-start justify-between mb-3">
-                      <FileTextIcon className="w-6 h-6 text-gray-700 flex-shrink-0 mt-1" />
-                      <div className="flex gap-1">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          asChild
-                        >
-                          <Link href={`/documents/${doc.id}`}>
-                            <EyeOpenIcon className="w-4 h-4" />
-                          </Link>
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleDeleteDocument(doc.id)}
-                          disabled={deletingIds.has(doc.id)}
-                        >
-                          <TrashIcon className="w-4 h-4" />
-                        </Button>
+              <>
+                <div className="mb-6 flex items-center justify-between">
+                  <p className="text-gray-600">
+                    {documents.length} document{documents.length !== 1 ? 's' : ''} in your library
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {documents.map((doc) => (
+                    <div key={doc.id} className="group bg-white border-2 border-gray-200 hover:border-black hover:shadow-lg transition-all duration-300 rounded-lg overflow-hidden">
+                      <div className="p-6">
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="w-12 h-12 bg-gray-100 group-hover:bg-gray-200 rounded-lg flex items-center justify-center transition-colors">
+                            <FileTextIcon className="w-6 h-6 text-gray-700" />
+                          </div>
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              asChild
+                              className="opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <Link href={`/documents/${doc.id}`}>
+                                <EyeOpenIcon className="w-4 h-4" />
+                              </Link>
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleDeleteDocument(doc.id)}
+                              disabled={deletingIds.has(doc.id)}
+                              className="opacity-0 group-hover:opacity-100 transition-opacity text-red-600 hover:text-red-700 hover:bg-red-50"
+                            >
+                              <TrashIcon className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                        <h3 className="font-semibold text-lg mb-2 truncate group-hover:text-gray-900 transition-colors">
+                          {doc.name}
+                        </h3>
+                        <div className="text-sm text-gray-500 space-y-1">
+                          <p className="flex items-center justify-between">
+                            <span>Size:</span>
+                            <span className="font-mono">{formatFileSize(doc.size)}</span>
+                          </p>
+                          <p className="flex items-center justify-between">
+                            <span>Uploaded:</span>
+                            <span className="font-mono">{new Date(doc.uploadedAt).toLocaleDateString()}</span>
+                          </p>
+                        </div>
                       </div>
                     </div>
-                    <h3 className="font-medium text-sm mb-2 truncate">{doc.name}</h3>
-                    <div className="text-xs text-gray-600 space-y-1">
-                      <p>Size: {formatFileSize(doc.size)}</p>
-                      <p>Uploaded: {new Date(doc.uploadedAt).toLocaleDateString()}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              </>
             )}
-          </div>
         </main>
       </div>
     </div>
