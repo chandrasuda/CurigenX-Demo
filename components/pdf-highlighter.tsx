@@ -65,7 +65,7 @@ const CustomTip = ({ onOpen, onConfirm }: CustomTipProps) => {
   const [selectedEmoji, setSelectedEmoji] = useState("💭");
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const emojis = ["💭", "💡", "⚠️", "✅", "❓", "📝", "🔍", "⭐"];
+  const emojis = ["💭", "💡", "⚠️", "✅", "❓", "📝", "🔍"];
 
   const handleOpen = () => {
     onOpen();

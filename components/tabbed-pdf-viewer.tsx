@@ -114,22 +114,22 @@ export default function TabbedPdfViewer({
       </div>
 
       {/* Tabbed Sidebar */}
-      <div className="w-96 border-l border-gray-300 bg-gray-50">
+      <div className="w-[420px] border-l border-black bg-white">
         <Tabs defaultValue="manual" className="h-full flex flex-col">
-          <div className="border-b border-gray-300 bg-white px-4 py-2">
+          <div className="border-b border-black bg-white px-2 py-2">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="manual" className="flex items-center gap-2">
+              <TabsTrigger value="manual" className="flex items-center gap-2 text-xs font-mono">
                 <Pencil1Icon className="w-4 h-4" />
                 Annotations
               </TabsTrigger>
-              <TabsTrigger value="ai" className="flex items-center gap-2">
+              <TabsTrigger value="ai" className="flex items-center gap-2 text-xs font-mono">
                 <GearIcon className="w-4 h-4" />
                 AI Analysis
               </TabsTrigger>
             </TabsList>
           </div>
 
-          <TabsContent value="manual" className="flex-1 mt-0">
+          <TabsContent value="manual" className="flex-1 mt-0 overflow-hidden">
             <ManualAnnotationsSidebar
               highlights={highlights}
               onHighlightClick={handleHighlightClick}

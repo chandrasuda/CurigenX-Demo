@@ -4,15 +4,12 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { type Document } from "@/lib/document-store";
 import { 
-  FileTextIcon, 
   GearIcon, 
   CheckCircledIcon, 
   InfoCircledIcon,
   ExclamationTriangleIcon,
-//   LightbulbIcon
 } from "@radix-ui/react-icons";
 import { LightbulbIcon } from "lucide-react";
 
@@ -168,18 +165,18 @@ export default function AIAnalysis({ document }: AIAnalysisProps) {
   };
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col border-black">
       {/* Fixed Header */}
-      <div className="flex-shrink-0 p-3 border-b border-gray-300 bg-white">
-        <div className="flex items-center gap-2 mb-2">
-          <GearIcon className="w-4 h-4 text-gray-700" />
-          <h2 className="text-sm font-semibold">AI Analysis</h2>
+      <div className="flex-shrink-0 p-2 border-b border-black bg-white">
+        <div className="flex items-center gap-2 mb-1">
+          <GearIcon className="w-4 h-4 text-black" />
+          <h2 className="text-sm font-mono font-semibold">AI Analysis</h2>
         </div>
         
         {/* Compact Document Info */}
-        <div className="text-xs text-gray-600 space-y-1 mb-3">
-          <div className="truncate"><strong>File:</strong> {document.name}</div>
-          <div className="flex gap-4">
+        <div className="text-xs text-gray-600 space-y-0.5 mb-2">
+          <div className="truncate font-mono"><strong>File:</strong> {document.name}</div>
+          <div className="flex gap-4 font-mono">
             <span><strong>Size:</strong> {formatFileSize(document.size)}</span>
             {document.analysis?.pageCount && (
               <span><strong>Pages:</strong> {document.analysis.pageCount}</span>
@@ -189,9 +186,10 @@ export default function AIAnalysis({ document }: AIAnalysisProps) {
 
         {!analysisComplete && (
           <Button 
-            className="w-full text-xs h-8" 
+            className="w-full text-xs h-7 font-mono border border-black" 
             onClick={handleRunAIAnalysis}
             disabled={analyzing}
+            variant="outline"
           >
             {analyzing ? (
               <>
@@ -208,72 +206,68 @@ export default function AIAnalysis({ document }: AIAnalysisProps) {
       {analysisComplete && (
         <>
           {/* Fixed Analysis Summary */}
-          <div className="flex-shrink-0 p-3 border-b border-gray-200 bg-gray-50">
-            <Card>
-              <CardContent className="p-3">
-                <h3 className="text-xs font-medium mb-2">Summary</h3>
-                <div className="grid grid-cols-4 gap-2 text-xs">
-                  <div className="text-center p-2 bg-red-50 rounded">
-                    <div className="font-bold text-red-700">{groupedComments.warnings.length}</div>
-                    <div className="text-red-600 text-[10px]">Warnings</div>
-                  </div>
-                  <div className="text-center p-2 bg-blue-50 rounded">
-                    <div className="font-bold text-blue-700">{groupedComments.suggestions.length}</div>
-                    <div className="text-blue-600 text-[10px]">Suggestions</div>
-                  </div>
-                  <div className="text-center p-2 bg-green-50 rounded">
-                    <div className="font-bold text-green-700">{groupedComments.highlights.length}</div>
-                    <div className="text-green-600 text-[10px]">Key Points</div>
-                  </div>
-                  <div className="text-center p-2 bg-gray-50 rounded">
-                    <div className="font-bold text-gray-700">{groupedComments.info.length}</div>
-                    <div className="text-gray-600 text-[10px]">Info</div>
-                  </div>
+          <div className="flex-shrink-0 p-2 border-b border-black bg-white">
+            <div className="space-y-1">
+              <h3 className="text-xs font-mono font-medium">Summary</h3>
+              <div className="grid grid-cols-4 gap-1 text-xs">
+                <div className="text-center p-1 border border-black rounded-none">
+                  <div className="font-mono font-bold">{groupedComments.warnings.length}</div>
+                  <div className="text-[10px] font-mono">Warnings</div>
                 </div>
-              </CardContent>
-            </Card>
+                <div className="text-center p-1 border border-black rounded-none">
+                  <div className="font-mono font-bold">{groupedComments.suggestions.length}</div>
+                  <div className="text-[10px] font-mono">Suggestions</div>
+                </div>
+                <div className="text-center p-1 border border-black rounded-none">
+                  <div className="font-mono font-bold">{groupedComments.highlights.length}</div>
+                  <div className="text-[10px] font-mono">Key Points</div>
+                </div>
+                <div className="text-center p-1 border border-black rounded-none">
+                  <div className="font-mono font-bold">{groupedComments.info.length}</div>
+                  <div className="text-[10px] font-mono">Info</div>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Scrollable AI Comments Section */}
           <div className="flex-1 min-h-0 overflow-hidden">
             <ScrollArea className="h-full">
-              <div className="p-3">
+              <div className="p-2">
                 {aiComments.length === 0 ? (
-                  <p className="text-xs text-gray-500 text-center py-6">
+                  <p className="text-xs text-gray-500 text-center py-4 font-mono">
                     No analysis results available.
                   </p>
                 ) : (
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     {aiComments.map((comment) => (
-                      <Card key={comment.id} className="border-l-4 border-l-gray-300">
-                        <CardContent className="p-3">
-                          <div className="flex items-start gap-2">
-                            <div className="flex-shrink-0 mt-0.5">
-                              {getIconForType(comment.type)}
+                      <div key={comment.id} className="border border-black p-2">
+                        <div className="flex items-start gap-2">
+                          <div className="flex-shrink-0 mt-0.5">
+                            {getIconForType(comment.type)}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-start justify-between gap-2 mb-1">
+                              <h4 className="text-xs font-mono font-medium leading-tight line-clamp-2">{comment.title}</h4>
+                              <Badge variant={getBadgeVariant(comment.type)} className="text-[10px] px-1 py-0 h-4 flex-shrink-0 font-mono border border-black">
+                                {comment.type}
+                              </Badge>
                             </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-start justify-between gap-2 mb-1">
-                                <h4 className="text-xs font-medium leading-tight line-clamp-2">{comment.title}</h4>
-                                <Badge variant={getBadgeVariant(comment.type)} className="text-[10px] px-1 py-0 h-4 flex-shrink-0">
-                                  {comment.type}
-                                </Badge>
-                              </div>
-                              <p className="text-xs text-gray-600 mb-2 leading-relaxed break-words hyphens-auto">
-                                {comment.content}
-                              </p>
-                              <div className="flex items-center gap-2 text-[10px] text-gray-500">
-                                {comment.page && (
-                                  <>
-                                    <span>Page {comment.page}</span>
-                                    <span>•</span>
-                                  </>
-                                )}
-                                <span>{Math.round(comment.confidence * 100)}% confidence</span>
-                              </div>
+                            <p className="text-xs text-gray-600 mb-1 leading-relaxed break-words hyphens-auto font-mono">
+                              {comment.content}
+                            </p>
+                            <div className="flex items-center gap-2 text-[10px] text-gray-500 font-mono">
+                              {comment.page && (
+                                <>
+                                  <span>Page {comment.page}</span>
+                                  <span>•</span>
+                                </>
+                              )}
+                              <span>{Math.round(comment.confidence * 100)}% confidence</span>
                             </div>
                           </div>
-                        </CardContent>
-                      </Card>
+                        </div>
+                      </div>
                     ))}
                   </div>
                 )}
@@ -282,10 +276,10 @@ export default function AIAnalysis({ document }: AIAnalysisProps) {
           </div>
 
           {/* Fixed Re-analyze Button */}
-          <div className="flex-shrink-0 p-3 border-t border-gray-200 bg-white">
+          <div className="flex-shrink-0 p-2 border-t border-black bg-white">
             <Button 
               variant="outline" 
-              className="w-full text-xs h-8" 
+              className="w-full text-xs h-7 font-mono border border-black" 
               onClick={handleRunAIAnalysis}
               disabled={analyzing}
             >
@@ -298,9 +292,9 @@ export default function AIAnalysis({ document }: AIAnalysisProps) {
       {/* Loading State */}
       {analyzing && (
         <div className="flex-1 flex items-center justify-center">
-          <div className="text-center py-6">
-            <GearIcon className="w-6 h-6 mx-auto mb-3 animate-spin text-gray-500" />
-            <p className="text-xs text-gray-600 px-2">
+          <div className="text-center py-4">
+            <GearIcon className="w-6 h-6 mx-auto mb-2 animate-spin text-black" />
+            <p className="text-xs text-gray-600 px-2 font-mono">
               Analyzing document for compliance and improvements...
             </p>
           </div>
