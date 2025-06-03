@@ -1,102 +1,137 @@
-import Image from "next/image";
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { UploadDropzone } from "@/lib/uploadthing";
+import { DocumentStore, type Document, type UploadResponse } from "@/lib/document-store";
+import { FileTextIcon, ListBulletIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const router = useRouter();
+  const [documents, setDocuments] = useState<Document[]>([]);
+  const [loading, setLoading] = useState(true);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    const loadDocuments = async () => {
+      try {
+        const docs = await DocumentStore.getDocuments();
+        setDocuments(docs);
+      } catch (error) {
+        console.error('Error loading documents:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadDocuments();
+  }, []);
+
+  const handleUploadComplete = async (res: UploadResponse[]) => {
+    if (res?.[0]?.serverData?.document) {
+      const newDocument = res[0].serverData.document;
+      try {
+        await DocumentStore.addDocument(newDocument);
+        // Redirect to the newly uploaded document
+        router.push(`/documents/${newDocument.id}`);
+      } catch (error) {
+        console.error('Error storing document:', error);
+      }
+    }
+  };
+
+  const handleUploadError = (error: Error) => {
+    alert(`Upload failed: ${error.message}`);
+  };
+
+  return (
+    <div className="flex flex-col min-h-screen items-center bg-white text-black font-mono p-4 sm:p-8">
+      {/* Hero Section */}
+      <section className="w-full max-w-4xl flex flex-col items-center gap-4 mb-12 mt-8">
+        <div className="flex flex-col items-center gap-2">
+          <Badge variant="outline" className="border-black text-xs px-3 py-1 tracking-widest uppercase bg-white">
+            For Pharma & Biotech
+          </Badge>
+          <h1 className="text-5xl sm:text-6xl font-bold tracking-tight border-b-4 border-black pb-2 mb-2 inline-block">
+            Curigenx
+          </h1>
+          <p className="text-lg sm:text-xl text-gray-700 max-w-xl text-center">
+            SaaS platform for regulatory, clinical, and medical writing teams. Automate and streamline QC of Clinical Study Reports (CSRs) for regulatory dossier accuracy, consistency, and scientific integrity.
+          </p>
+        </div>
+        <div className="relative w-32 h-32 mt-6 mb-2">
+          <img src="/globe.svg" alt="Technical Globe" className="w-full h-full object-contain opacity-70" />
+          <span className="sr-only">Technical globe accent</span>
+        </div>
+      </section>
+
+      <main className="flex flex-col items-center w-full max-w-4xl gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+          <Card className="border-black bg-white">
+            <CardContent className="p-6">
+              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                <FileTextIcon className="w-5 h-5" />
+                Upload New Document
+              </h2>
+              <UploadDropzone
+                endpoint="pdfUploader"
+                onClientUploadComplete={handleUploadComplete}
+                onUploadError={handleUploadError}
+                appearance={{
+                  container: "border-2 border-dashed border-gray-300 bg-white font-mono",
+                  uploadIcon: "text-gray-400",
+                  label: "text-sm text-gray-700 font-medium",
+                  allowedContent: "text-xs text-gray-500",
+                  button: "bg-black text-white border-black font-mono text-sm px-4 py-2"
+                }}
+              />
+            </CardContent>
+          </Card>
+          <Card className="border-black bg-white">
+            <CardContent className="p-6">
+              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                <ListBulletIcon className="w-5 h-5" />
+                Your Documents
+              </h2>
+              {loading ? (
+                <p className="text-gray-600 text-sm">Loading documents...</p>
+              ) : documents.length === 0 ? (
+                <p className="text-gray-600 text-sm">No documents uploaded yet.</p>
+              ) : (
+                <>
+                  <p className="text-sm text-gray-700 mb-3">
+                    {documents.length} document{documents.length !== 1 ? 's' : ''} uploaded
+                  </p>
+                  <div className="space-y-2">
+                    {documents.map((doc) => (
+                      <Link
+                        key={doc.id}
+                        href={`/documents/${doc.id}`}
+                        className="block border border-gray-300 p-3 bg-white hover:bg-gray-50 transition-colors rounded-none"
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <FileTextIcon className="w-4 h-4 text-gray-700" />
+                          <h4 className="font-medium text-sm truncate">{doc.name}</h4>
+                        </div>
+                        <p className="text-xs text-gray-600">
+                          Uploaded: {new Date(doc.uploadedAt).toLocaleDateString()}
+                        </p>
+                      </Link>
+                    ))}
+                  </div>
+                </>
+              )}
+            </CardContent>
+          </Card>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+      {/* Minimal Footer/Tagline */}
+      <footer className="w-full max-w-4xl mx-auto mt-16 mb-4 text-center border-t border-black pt-4 text-xs text-gray-500 font-mono">
+        Ensuring scientific integrity & regulatory accuracy for every submission.
       </footer>
     </div>
   );
